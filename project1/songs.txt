@@ -1,0 +1,11 @@
+Here Comes the Sun,The Beatles,3.08,882320331
+Let it Be,The Beatles,4.05,494664175
+Come Together,The Beatles,4.32,543856099
+Spiral - Mono,John Coltrane,6.00,3796770
+In A Sentimental Mood,John Coltrane,4.25,140402584
+No Role Modelz,J. Cole,4.87,1395706031
+MIDDLE CHILD,J. Cole,3.55,949680032
+A Tale of 2 Citiez,J. Cole,4.48,260763417
+St. Tropez,J. Cole,4.28,73736078
+N95,Kendrick Lamar,3.25,163787879
+HUMBLE.,Kendrick Lamar,2.95,1704513844
