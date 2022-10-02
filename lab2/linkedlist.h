@@ -16,7 +16,27 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const LinkedList& list);
 
 private:
-	//fill in your code here
+	struct Node {
+		Node() {
+			next = prev = nullptr;
+			data = '\0';
+		}
+		Node(const char ch) {
+			next = prev = nullptr;
+			data = ch;
+		}
+		~Node() {
+			next = prev = nullptr;
+			data = '\0';
+		}
+		char data;
+		Node * next;
+		Node * prev;
+	};
+
+	Node * head;
+	Node * tail;
+	int size;
 };
 
 #endif // _LINKED_LIST_

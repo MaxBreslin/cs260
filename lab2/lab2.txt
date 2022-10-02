@@ -1,0 +1,33 @@
+bool LinkedList::del(char ch) {
+    Node * curr = head;
+    while (curr) {
+        if (curr->data == ch) {
+            if (curr->prev) {
+                curr->prev->next = curr->next;
+            }
+            else {
+                head = curr->next;
+            }
+            if (curr->next) {
+                curr->next->prev = curr->prev;
+            }
+            else {
+                tail = curr->prev;
+            }
+            delete curr;
+            size --;
+            return true;
+        }
+        curr = curr->next;
+    }
+    return false;
+}
+
+x y z 
+found y
+x z 
+did not find y
+z 
+did not find y
+
+did not find y
