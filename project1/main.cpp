@@ -17,38 +17,28 @@ int main() {
 
     welcome();
 
-    // while ((option = menu()) != 1) {
-    //     switch(option) {
-    //         case 2:
-    //             add(list);
-    //             break;
-    //         case 3:
-    //             edit(list);
-    //             break;
-    //         case 4:
-    //             display(list);
-    //             break;
-    //         case 5:
-    //             display_artist(list);
-    //             break;
-    //         case 6:
-    //             remove(list);
-    //             break;
-    //         default:
-    //             std::cout << "Invalid option" << std::endl;
-    //             return EXIT_FAILURE;
-    //     }
-    //  }
-
-    std::cout << list << std::endl;
-
-    add(list);
-
-    std::cout << list << std::endl;
-
-    edit(list);
-
-    std::cout << list << std::endl;
+    while ((option = menu()) != 1) {
+        switch(option) {
+            case 2:
+                add(list);
+                break;
+            case 3:
+                edit(list);
+                break;
+            case 4:
+                display(list);
+                break;
+            case 5:
+                display_artist(list);
+                break;
+            case 6:
+                remove(list);
+                break;
+            default:
+                std::cout << "Invalid option" << std::endl;
+                return EXIT_FAILURE;
+        }
+     }
 
     std::cout << "[done]" << std::endl;
 
@@ -60,15 +50,16 @@ void load_songs(SongList &list) {
     char * title = nullptr;
     char * artist = nullptr;
     double length = 0;
-    unsigned int likes = 0;
+    long long likes = 0;
     Song song;
 
     file.open("songs.txt");
     if (!file) {
         throw "Error opening file \"songs.txt\"";
-        return;
     }
 
+    // Read in data from the file in format "title,artist,length,likes" and 
+    // add it to the list
     while (!file.eof()) {
         title = get_name(file, ',');
         artist = get_name(file, ',');
@@ -149,11 +140,43 @@ char * get_name(std::istream &in, const char delim = '\n') {
     return name;
 }
 
+long long get_likes() {
+    long long likes = 0;
+
+    std::cin >> likes;
+    while (std::cin.fail() || likes < 0) {
+        std::cin.clear();
+        std::cin.ignore(1024, '\n');
+        std::cout << "Invalid number of likes" << std::endl;
+        std::cout << "Enter number of likes: ";
+        std::cin >> likes;
+    }
+    std::cin.ignore(2, '\n');
+
+    return likes;
+}
+
+double get_length() {
+    double length = 0;
+
+    std::cin >> length;
+    while (std::cin.fail() || length < 0) {
+        std::cin.clear();
+        std::cin.ignore(1024, '\n');
+        std::cout << "Invalid length" << std::endl;
+        std::cout << "Enter length: ";
+        std::cin >> length;
+    }
+    std::cin.ignore(2, '\n');
+
+    return length;
+}
+
 void add(SongList &list) {
     char * title = nullptr;
     char * artist = nullptr;
     double length = 0;
-    unsigned int likes = 0;
+    long long likes = 0;
     Song song;
 
     std::cout << "Enter the title of the song (e.g. Let it Be): ";
@@ -163,26 +186,10 @@ void add(SongList &list) {
     artist = get_name(std::cin);
 
     std::cout << "Enter the length of the song (e.g. 3.08): ";
-    std::cin >> length;
-    while (std::cin.fail() || length < 0) {
-        std::cin.clear();
-        std::cin.ignore(1024, '\n');
-        std::cout << "Invalid length" << std::endl;
-        std::cout << "Enter the length of the song: ";
-        std::cin >> length;
-    }
-    std::cin.ignore(2, '\n');
+    length = get_length();
 
     std::cout << "Enter the number of likes for the song (e.g. 8000000): ";
-    std::cin >> likes;
-    while (std::cin.fail()) {
-        std::cin.clear();
-        std::cin.ignore(1024, '\n');
-        std::cout << "Invalid number of likes" << std::endl;
-        std::cout << "Enter the number of likes for the song: ";
-        std::cin >> likes;
-    }
-    std::cin.ignore(2, '\n');
+    likes = get_likes();
 
     song.set_title(title);
     delete[] title;
@@ -197,7 +204,7 @@ void add(SongList &list) {
 void edit(SongList &list) {
     char * title = nullptr;
     char * artist = nullptr;
-    unsigned int likes = 0;
+    long long likes = 0;
 
     Song original_song;
     Song new_song;
@@ -211,7 +218,7 @@ void edit(SongList &list) {
     original_song.set_title(title);
     original_song.set_artist(artist);
 
-    std::cout << "Searching for " << title << " - " << artist << " in list..." << std::endl;
+    std::cout << "Searching for \"" << title << "\" - \"" << artist << "\" in list..." << std::endl;
 
     delete[] title;
     delete[] artist;
@@ -219,26 +226,42 @@ void edit(SongList &list) {
     try {
         new_song = list.remove(original_song);
     }
-    catch (const char * error) {
-        std::cout << error << std::endl;
+    catch (const char * err) {
+        std::cout << err << std::endl;
         return;
     }
 
     std::cout << "Found!" << std::endl << std::endl;
 
     std::cout << "Enter the new number of likes: ";
-    std::cin >> likes;
-    while (std::cin.fail()) {
-        std::cin.clear();
-        std::cin.ignore(1024, '\n');
-        std::cout << "Invalid number of likes" << std::endl;
-        std::cout << "Enter the new number of likes: ";
-        std::cin >> likes;
-    }
-    std::cin.ignore(2, '\n');
+    likes = get_likes();
 
     new_song.set_likes(likes);
     list.add(new_song);
 
     std::cout << "Song updated!" << std::endl;
+}
+
+void display(const SongList &list) {
+    std::cout << std::endl << list << std::endl;
+}
+
+void display_artist(const SongList &list) {
+    const char * artist = nullptr;
+
+    std::cout << "Enter the artist to display (e.g. The Beatles): ";
+    artist = get_name(std::cin);
+
+    list.display_artist(artist);
+
+    delete[] artist;
+}
+
+void remove(SongList &list) {
+    long long likes = 0;
+
+    std::cout << "Enter the minimum number of likes to remove (e.g. 10000): ";
+    likes = get_likes();
+
+    list.remove_with_fewer_likes(likes);
 }

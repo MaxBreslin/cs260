@@ -13,10 +13,12 @@ public:
 
     void add(const Song &);
     Song remove(const Song &);
-    void remove_with_fewer_likes(unsigned int);
-    void display_songs_by_artist(const char * &) const;
+    void remove_with_fewer_likes(long long);
+    void display_artist(const char * &) const;
 
 private:
     Node * m_head;
     size_t m_size;
+
+    Node * add(const Song &, Node * &);
 };

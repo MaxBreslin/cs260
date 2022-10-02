@@ -5,7 +5,7 @@ SongList::SongList() {
     m_size = 0;
 }
 
-SongList::SongList(const SongList & obj) {
+SongList::SongList(const SongList &obj) {
     m_head = nullptr;
     m_size = 0;
     Node * temp = obj.m_head;
@@ -31,7 +31,7 @@ SongList::~SongList() {
     m_size = 0;
 }
 
-SongList & SongList::operator=(const SongList & obj) {
+SongList & SongList::operator=(const SongList &obj) {
     if (this != &obj) {
         Node * temp = m_head;
 
@@ -56,7 +56,7 @@ SongList & SongList::operator=(const SongList & obj) {
     return *this;
 }
 
-std::ostream & operator<<(std::ostream & out, const SongList & obj) {
+std::ostream & operator<<(std::ostream &out, const SongList &obj) {
     Node * temp = obj.m_head;
 
     while (temp) {
@@ -67,42 +67,36 @@ std::ostream & operator<<(std::ostream & out, const SongList & obj) {
     return out;
 }
 
-void SongList::add(const Song & obj) {
-    if (!m_head) {
-        m_head = new Node(obj);
-        return;
+void SongList::add(const Song &obj) {
+    add(obj, m_head);
+}
+Node * SongList::add(const Song &obj, Node * &curr) {
+    if (!curr) {
+        curr = new Node(obj);
     }
-
-    Node * curr = m_head;
-    Node * prev = nullptr;
-
-    while (curr && obj < *curr->data) {
-        prev = curr;
-        curr = curr->next;
-    }
-    
-    if (prev) {
-        prev->next = new Node(obj);
-        prev->next->next = curr;
+    else if (obj > *curr->data) {
+        Node * temp = curr;
+        curr = new Node(obj);
+        curr->next = temp;
     }
     else {
-        prev = new Node(obj);
-        prev->next = m_head;
-        m_head = prev;
+        curr->next = add(obj, curr->next);
     }
-    m_size ++;
+
+    return curr;
 }
 
 Song SongList::remove(const Song &obj) {
-    if (!m_head) {
-        throw "List is empty";
-    }
-
     Node * curr = m_head;
+    Node * prev = nullptr;
     Node * temp = nullptr;
     Song deleted_song;
 
-    while (curr && *curr->data != obj) {
+    while (curr) {
+        if (curr->data->matches_artist_and_title(obj)) {
+            break;
+        }
+        prev = curr;
         curr = curr->next;
     }
 
@@ -111,20 +105,23 @@ Song SongList::remove(const Song &obj) {
     }
 
     deleted_song = *curr->data;
-    temp = curr;
-    curr = curr->next;
-    delete temp;
 
+    if (prev) {
+        temp = curr;
+        prev->next = curr->next;
+    }
+    else {
+        temp = m_head;
+        m_head = m_head->next;
+    }
+
+    delete temp;
     m_size --;
 
     return deleted_song;
 }
 
-void SongList::remove_with_fewer_likes(unsigned int likes) {
-    if (!m_head) {
-        throw "List is empty";
-    }
-
+void SongList::remove_with_fewer_likes(long long likes) {
     Node * curr = m_head;
     Node * prev = nullptr;
 
@@ -149,7 +146,7 @@ void SongList::remove_with_fewer_likes(unsigned int likes) {
     }
 }
 
-void SongList::display_songs_by_artist(const char * &artist) const {
+void SongList::display_artist(const char * &artist) const {
     Node * curr = m_head;
     char * temp = nullptr;
 
@@ -158,7 +155,7 @@ void SongList::display_songs_by_artist(const char * &artist) const {
         if (strcmp(temp, artist) == 0) {
             std::cout << *curr->data << std::endl;
         }
-        delete [] temp;
+        delete[] temp;
         curr = curr->next;
     }
 }

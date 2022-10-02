@@ -4,10 +4,10 @@ Song::Song() {
     m_artist = nullptr;
     m_title = nullptr;
     m_length = 0.0;
-    m_likes = 0U;
+    m_likes = 0;
 }
 
-Song::Song(const char * title, const char * artist, double length, unsigned int likes) {
+Song::Song(const char * title, const char * artist, double length, long long likes) {
     m_artist = new char[strlen(artist) + 1];
     strcpy(m_artist, artist);
     m_title = new char[strlen(title) + 1];
@@ -31,10 +31,10 @@ Song::~Song() {
     m_artist = nullptr;
     m_title = nullptr;
     m_length = 0.0;
-    m_likes = 0U;
+    m_likes = 0;
 }
 
-Song & Song::operator=(const Song & obj) {
+Song & Song::operator=(const Song &obj) {
     if (this != &obj) {
         delete[] m_artist;
         delete[] m_title;
@@ -48,7 +48,7 @@ Song & Song::operator=(const Song & obj) {
     return *this;
 }
 
-std::ostream & operator<<(std::ostream & out, const Song & obj) {
+std::ostream & operator<<(std::ostream &out, const Song &obj) {
     out << obj.m_artist << " - " << obj.m_title << " (" << obj.m_length << " min) [" << obj.m_likes << " likes]";
     return out;
 }
@@ -59,7 +59,7 @@ char * Song::get_artist() const {
     return temp;
 }
 
-unsigned int Song::get_likes() const {
+long long Song::get_likes() const {
     return m_likes;
 }
 
@@ -79,25 +79,29 @@ void Song::set_length(double length) {
     m_length = length;
 }
 
-void Song::set_likes(unsigned int likes) {
+void Song::set_likes(long long likes) {
     m_likes = likes;
 }
 
-bool Song::operator==(const Song & rhs) const {
-    return (strcmp(m_artist, rhs.m_artist) == 0 && strcmp(m_title, rhs.m_title) == 0);
+bool Song::matches_artist_and_title(const Song &rhs) const {
+    return strcmp(m_artist, rhs.m_artist) == 0 && strcmp(m_title, rhs.m_title) == 0;
 }
-bool Song::operator>(const Song & rhs) const {
+
+bool Song::operator==(const Song &rhs) const {
+    return m_likes == rhs.m_likes;
+}
+bool Song::operator>(const Song &rhs) const {
     return m_likes > rhs.m_likes;
 }
-bool Song::operator>=(const Song & rhs) const {
+bool Song::operator>=(const Song &rhs) const {
     return *this > rhs || *this == rhs;
 }
-bool Song::operator<(const Song & rhs) const {
+bool Song::operator<(const Song &rhs) const {
     return !(*this >= rhs);
 }
-bool Song::operator<=(const Song & rhs) const {
+bool Song::operator<=(const Song &rhs) const {
     return !(*this > rhs);
 }
-bool Song::operator!=(const Song & rhs) const {
+bool Song::operator!=(const Song &rhs) const {
     return !(*this == rhs);
 }

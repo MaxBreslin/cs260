@@ -8,7 +8,7 @@
 class Song {
 public:
     Song();
-    Song(const char *, const char *, double, unsigned int);
+    Song(const char *, const char *, double, long long);
     Song(const Song &);
     ~Song();
 
@@ -16,12 +16,14 @@ public:
     friend std::ostream & operator<<(std::ostream &, const Song &);
 
     char * get_artist() const;
-    unsigned int get_likes() const;
+    long long get_likes() const;
 
     void set_artist(const char *);
     void set_title(const char *);
     void set_length(double);
-    void set_likes(unsigned int);
+    void set_likes(long long);
+
+    bool matches_artist_and_title(const Song &) const;
 
     bool operator==(const Song &) const;
     bool operator!=(const Song &) const;
@@ -34,5 +36,5 @@ private:
     char * m_artist;
     char * m_title;
     double m_length;
-    unsigned int m_likes;
+    long long m_likes;
 };
