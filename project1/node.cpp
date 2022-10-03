@@ -13,4 +13,5 @@ Node::Node(const Song &obj) {
 Node::~Node() {
     delete data;
     data = nullptr;
+    next = nullptr;
 }
