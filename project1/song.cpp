@@ -1,3 +1,5 @@
+// song.cpp - Song class implementation
+
 #include "song.h"
 
 Song::Song() {

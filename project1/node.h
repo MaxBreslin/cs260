@@ -1,3 +1,5 @@
+// node.h - Node struct declaration
+
 #pragma once
 
 #include "song.h"

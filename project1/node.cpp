@@ -1,3 +1,5 @@
+// node.cpp - Node struct implementation
+
 #include "node.h"
 
 Node::Node() {

@@ -1,3 +1,5 @@
+// songlist.cpp - SongList class implementation
+
 #include "songlist.h"
 
 SongList::SongList() {

@@ -1,3 +1,14 @@
+/*
+    Max Breslin - October 1st, 2022
+    CS260 Data Structures
+    Project 1
+
+    This program will read in a file of songs and store them in a linked list.
+    The user will be able to add, edit, remove, and view songs from the list.
+*/
+
+// main.cpp - main function and menu functions
+
 #include "main.h"
 
 int main() {

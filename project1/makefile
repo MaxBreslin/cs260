@@ -18,4 +18,4 @@ check:
 	valgrind --leak-check=full ./$(TARGET)
 
 clean:
-	rm $(TARGET)
+	rm $(TARGET) main.o songlist.o node.o song.o
