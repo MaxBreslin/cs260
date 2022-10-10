@@ -14,8 +14,18 @@ Song::Song(const char * title, const char * artist, double length, long long lik
     strcpy(m_artist, artist);
     m_title = new char[strlen(title) + 1];
     strcpy(m_title, title);
-    m_length = length;
-    m_likes = likes;
+    if (length < 0) {
+        m_length = 0.0;
+    }
+    else {
+        m_length = length;
+    }
+    if (likes < 0) {
+        m_likes = 0;
+    }
+    else {
+        m_likes = likes;
+    }
 }
 
 Song::Song(const Song & obj) {
@@ -61,8 +71,18 @@ char * Song::get_artist() const {
     return temp;
 }
 
+char * Song::get_title() const {
+    char * temp = new char[strlen(m_title) + 1];
+    strcpy(temp, m_title);
+    return temp;
+}
+
 long long Song::get_likes() const {
     return m_likes;
+}
+
+double Song::get_length() const {
+    return m_length;
 }
 
 void Song::set_artist(const char * artist) {
@@ -78,10 +98,16 @@ void Song::set_title(const char * title) {
 }
 
 void Song::set_length(double length) {
+    if (length < 0) {
+        throw "Length cannot be negative";
+    }
     m_length = length;
 }
 
 void Song::set_likes(long long likes) {
+    if (likes < 0) {
+        throw "Likes cannot be negative";
+    }
     m_likes = likes;
 }
 

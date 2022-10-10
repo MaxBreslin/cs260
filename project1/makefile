@@ -2,6 +2,8 @@ TARGET=main
 CC=g++
 CFLAGS= --std=c++11 -Wall -g
 
+build: $(TARGET)
+
 $(TARGET): main.o songlist.o node.o song.o
 	$(CC) $(CFLAGS) -o $(TARGET) main.o songlist.o node.o song.o
 

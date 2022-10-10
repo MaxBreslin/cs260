@@ -18,10 +18,12 @@ public:
     friend std::ostream & operator<<(std::ostream &, const Song &);
 
     // Returns a pointer to a dynamically allocated char array containing 
-    // m_artist
+    // the member variable
     char * get_artist() const;
+    char * get_title() const;
 
-    // Returns m_likes
+    // Returns the member variable
+    double get_length() const;
     long long get_likes() const;
 
     // Sets m_artist
