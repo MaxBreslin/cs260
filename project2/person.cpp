@@ -17,7 +17,7 @@ Person::Person(const Person &obj) {
     m_receive_coupons = obj.m_receive_coupons;
 }
 
-Person::Person(const char * &name, const char * &email, const char * &special_requirements, const bool &receive_coupons) {
+Person::Person(const char * &name, const char * &email, const char * &special_requirements, const bool receive_coupons) {
     m_name = new char[strlen(name) + 1];
     strcpy(m_name, name);
     m_email = new char[strlen(email) + 1];

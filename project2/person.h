@@ -9,7 +9,7 @@ class Person {
 public:
     Person();
     Person(const Person &);
-    Person(const char * &, const char * &, const char * &, const bool &);
+    Person(const char * &, const char * &, const char * &, const bool);
     ~Person();
 
     Person & operator=(const Person &);
