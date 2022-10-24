@@ -69,9 +69,6 @@ Queue<T> & Queue<T>::operator=(const Queue<T> &obj) {
 template<class T>
 std::ostream & operator<<(std::ostream &out, const Queue<T> &obj) {
     Node<T> * temp = obj.m_head;
-
-    std::cout << "Queue length: " << obj.m_size << std::endl;
-
     do {
         out << *temp->data << std::endl;
         temp = temp->next;

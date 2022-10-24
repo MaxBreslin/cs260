@@ -83,9 +83,6 @@ Stack<T> & Stack<T>::operator=(const Stack<T> &obj) {
 
 template <class T>
 std::ostream & operator<<(std::ostream &out, const Stack<T> &obj) {
-    std::cout << "Stack size: " << obj.m_size << std::endl;
-    std::cout << "Stack capacity: " << obj.m_capacity << std::endl;
-
     for (size_t i = 0; i < obj.m_size; i ++) {
         out << obj.m_arr[i] << std::endl;
     }

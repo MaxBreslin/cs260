@@ -25,12 +25,11 @@ char * get_name(std::istream &, const char);
 
 bool get_coupon_choice(std::istream &);
 
-
 void push_person(Queue<Person> &, Stack<Person> &);
 
 void pop_from_line(Queue<Person> &);
 
-void pop_from_stack(Stack<Person> &);
+void pop_from_stack(Stack<Person> &, std::ofstream &);
 
 void display_line(const Queue<Person> &);
 

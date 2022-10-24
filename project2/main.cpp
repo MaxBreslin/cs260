@@ -13,6 +13,13 @@ int main() {
     Queue<Person> line;
     Stack<Person> people;
 
+    std::ofstream promo_file;
+    promo_file.open("promos.txt");
+    if (!promo_file) {
+        std::cout << "Error opening file" << std::endl;
+        return EXIT_FAILURE;
+    }
+
     int option = 0;
 
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -29,7 +36,7 @@ int main() {
                 pop_from_line(line);
                 break;
             case 4:
-                pop_from_stack(people);
+                pop_from_stack(people, promo_file);
                 break;
             case 5:
                 display_line(line);
@@ -146,11 +153,13 @@ void push_person(Queue<Person> &line, Stack<Person> &people) {
     Person person(name, email, special_requirements, receive_coupons);
 
     line.push(person);
+    std::cout << "\"" << name << "\"" << " added to waiting line" << std::endl;
+
     if (receive_coupons) {
         people.push(person);
+        std::cout << "\"" << name << "\"" << " added to promotional stack" << std::endl;
     }
 
-    std::cout << "\"" << name << "\"" << " added to waiting line" << std::endl;
     delete[] name;
     delete[] email;
     delete[] special_requirements;
@@ -168,7 +177,7 @@ void pop_from_line(Queue<Person> &line) {
     delete[] name;
 }
 
-void pop_from_stack(Stack<Person> &people) {
+void pop_from_stack(Stack<Person> &people, std::ofstream &promo_file) {
     if (people.is_empty()) {
         std::cout << "No one in stack" << std::endl;
         return;
@@ -177,6 +186,7 @@ void pop_from_stack(Stack<Person> &people) {
     Person person = people.pop();
     char * name = person.get_name();
     std::cout << "Sending promotional offer to \"" << name << "\"" << std::endl;
+    promo_file << person << std::endl;
     delete[] name;
 }
 
