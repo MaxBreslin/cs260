@@ -15,8 +15,8 @@ public:
     template<class Y>
     friend std::ostream & operator<<(std::ostream &, const Queue<Y> &);
 
-    void enqueue(const T &);
-    T dequeue();
+    void push(const T &);
+    T pop();
     bool is_empty() const;
     T peek() const;
     void display() const;
@@ -40,14 +40,14 @@ Queue<T>::Queue(const Queue<T> &obj) {
     m_size = 0;
     Node<T> * temp = obj.m_head;
     do {
-        enqueue(*temp->data);
+        push(*temp->data);
         temp = temp->next;
     } while (temp != obj.m_head);
 }
 template<class T>
 Queue<T>::~Queue() {
     while (!is_empty()) {
-        dequeue();
+        pop();
     }
 }
 
@@ -55,11 +55,11 @@ template<class T>
 Queue<T> & Queue<T>::operator=(const Queue<T> &obj) {
     if (this != &obj) {
         while (!is_empty()) {
-            dequeue();
+            pop();
         }
         Node<T> * temp = obj.m_head;
         do {
-            enqueue(*temp->data);
+            push(*temp->data);
             temp = temp->next;
         } while (temp != obj.m_head);
     }
@@ -81,7 +81,7 @@ std::ostream & operator<<(std::ostream &out, const Queue<T> &obj) {
 }
 
 template<class T>
-void Queue<T>::enqueue(const T &obj) {
+void Queue<T>::push(const T &obj) {
     Node<T> * temp = new Node<T>(obj);
     if (is_empty()) {
         m_head = temp;
@@ -96,13 +96,13 @@ void Queue<T>::enqueue(const T &obj) {
 }
 
 template<class T>
-T Queue<T>::dequeue() {
+T Queue<T>::pop() {
     if (is_empty()) {
         throw "Queue is empty";
     }
 
+    T data = peek();
     Node<T> * temp = m_head;
-    T data = *temp->data; // copy assignment operator
     m_head = m_head->next;
     m_tail->next = m_head;
     delete temp;

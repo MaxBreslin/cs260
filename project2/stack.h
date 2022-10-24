@@ -115,7 +115,7 @@ T Stack<T>::pop() {
     if (!m_size) {
         throw "Stack is empty";
     }
-    T temp = m_arr[m_size - 1];
+    T temp = peek();
     m_size --;
     return temp;
 }
