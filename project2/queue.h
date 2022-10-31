@@ -1,3 +1,5 @@
+// queue.h - Queue template class declaration and implementation
+
 #pragma once
 
 #include <iostream>
@@ -15,10 +17,19 @@ public:
     template<class Y>
     friend std::ostream & operator<<(std::ostream &, const Queue<Y> &);
 
+    // Pushes the passed object to the end of the queue
     void push(const T &);
+
+    // Removes the first object in the queue and returns it
     T pop();
+
+    // Returns true if the queue is empty, false otherwise
     bool is_empty() const;
+
+    // Returns the first object in the queue
     T peek() const;
+
+    // Displays the contents of the queue
     void display() const;
 
 private:
@@ -68,10 +79,12 @@ Queue<T> & Queue<T>::operator=(const Queue<T> &obj) {
 
 template<class T>
 std::ostream & operator<<(std::ostream &out, const Queue<T> &obj) {
+    int i = 1;
     Node<T> * temp = obj.m_head;
     do {
-        out << *temp->data << std::endl;
+        out << i << ": " << *temp->data << std::endl;
         temp = temp->next;
+        i ++;
     } while (temp != obj.m_head);
 
     return out;

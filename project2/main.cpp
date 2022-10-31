@@ -3,6 +3,10 @@
     CS260 Data Structures
     Project 2
 
+    This program will read in a file of people and add them to a queue and stack.
+    It will then allow the user to add people to the queue and stack, remove
+    people from the queue and stack, and display the queue and stack. Everytime a
+    person is removed from the stack, their information will be written to 'promos.txt'.
 */
 
 // main.cpp - main function and menu functions
@@ -13,17 +17,27 @@ int main() {
     Queue<Person> line;
     Stack<Person> people;
 
-    std::ofstream promo_file;
-    promo_file.open("promos.txt");
-    if (!promo_file) {
-        std::cout << "Error opening file" << std::endl;
-        return EXIT_FAILURE;
-    }
+    std::ofstream promo_file_out;
+    std::ifstream people_file_in;
 
     int option = 0;
 
     std::cout.setf(std::ios::fixed, std::ios::floatfield);
     std::cout.precision(2);
+
+    people_file_in.open("people.txt");
+    if (!people_file_in) {
+        std::cout << "Error opening file \'people.txt\'" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    promo_file_out.open("promos.txt");
+    if (!promo_file_out) {
+        std::cout << "Error opening file \'promos.txt\'" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    load_people(line, people, people_file_in);
 
     welcome();
 
@@ -36,7 +50,7 @@ int main() {
                 pop_from_line(line);
                 break;
             case 4:
-                pop_from_stack(people, promo_file);
+                pop_from_stack(people, promo_file_out);
                 break;
             case 5:
                 display_line(line);
@@ -53,6 +67,37 @@ int main() {
     std::cout << "[done]" << std::endl;
 
     return EXIT_SUCCESS;
+}
+
+void load_people(Queue<Person> &line, Stack<Person> &people, std::ifstream &file) {
+    char * name = nullptr;
+    char * email = nullptr;
+    char * special_requirements = nullptr;
+    bool receive_coupons = false;
+
+    Person person;
+
+    // Read in data from the file in format "name,email,special_requirements,receive_coupons" and 
+    // add it to the line and stack (if receive_coupons is true)
+    while (!file.eof()) {
+        name = get_name(file, ',');
+        email = get_name(file, ',');
+        special_requirements = get_name(file, ',');
+        file >> receive_coupons;
+        file.ignore(2, '\n');
+
+        person.set_name(name);
+        delete[] name;
+        person.set_email(email);
+        delete[] email;
+        person.set_special_requirements(special_requirements);
+        delete[] special_requirements;
+        person.set_coupon_choice(receive_coupons);
+        line.push(person);
+        if (receive_coupons) {
+            people.push(person);
+        }
+    }
 }
 
 void welcome() {

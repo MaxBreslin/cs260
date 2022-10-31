@@ -1,3 +1,5 @@
+// node.h - Node template struct declaration and implementation
+
 #pragma once
 
 template<class T>

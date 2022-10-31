@@ -1,3 +1,5 @@
+// stack.h - Stack template class declaration and implementation
+
 #pragma once
 
 #include <iostream>
@@ -15,10 +17,19 @@ public:
     template <class Y>
     friend std::ostream & operator<<(std::ostream &, const Stack<Y> &);
 
+    // Pushes the passed object to the top of the stack
     void push(const T &);
+
+    // Removes the top object of the stack and returns it
     T pop();
+
+    // Returns true if the stack is empty, false otherwise
     bool is_empty() const;
+
+    // Returns the top object of the stack
     T peek() const;
+
+    // Displays the contents of the stack
     void display() const;
 
 private:

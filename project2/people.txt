@@ -1,0 +1,14 @@
+John Doe,john@gmail.com,,1
+Jane Smith,jane@gmail.com,no meat,1
+Sally Jones,sally@gmail.com,,0
+Walter Jones,walter@gmail.com,high chair,1
+Carol Hunter,ripplemdk@test.gy,,1
+Allen Mcbride,soffes@example.bot,,0
+Domonique Nguyen,91bilal@test.dm,no meat,0
+Mose Newton,areus@example.goodhands,,1
+Porfirio Stokes,roybarberuk@example.bg,,1
+Maryalice Moore,IsaryAmairani@example.photo,,0
+Domonique Yates,sgaurav_baghel@example.ki,no gluten,0
+Waneta Mcdaniel,soyjavi@test.cheap,low sodium,1
+Loida Silva,exentrich@test.la,high chair,1
+Marceline Snyder,Karimmove@example.tc,,0

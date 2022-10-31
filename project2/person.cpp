@@ -1,3 +1,5 @@
+// person.cpp - Person class implementation
+
 #include "person.h"
 
 Person::Person() {
@@ -120,4 +122,35 @@ char * Person::get_special_requirements() const {
 
 bool Person::get_coupon_choice() const {
     return m_receive_coupons;
+}
+
+void Person::set_name(char * const &name) {
+    delete[] m_name;
+    m_name = nullptr;
+    if (name) {
+        m_name = new char[strlen(name) + 1];
+        strcpy(m_name, name);
+    }
+}
+
+void Person::set_email(char * const &email) {
+    delete[] m_email;
+    m_email = nullptr;
+    if (email) {
+        m_email = new char[strlen(email) + 1];
+        strcpy(m_email, email);
+    }
+}
+
+void Person::set_special_requirements(char * const &special_requirements) {
+    delete[] m_special_requirements;
+    m_special_requirements = nullptr;
+    if (special_requirements) {
+        m_special_requirements = new char[strlen(special_requirements) + 1];
+        strcpy(m_special_requirements, special_requirements);
+    }
+}
+
+void Person::set_coupon_choice(const bool receive_coupons) {
+    m_receive_coupons = receive_coupons;
 }
