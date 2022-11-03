@@ -8,9 +8,9 @@ int main()
     display(head);
 
     cout << "Item count: " << count(head) << endl;
-    // cout << "Inserting 5 at position 5..." << endl;
-    // insert(head, 5 , 5);
-    cout << "Integer at position 3 removed: " << remove(head, 3) << endl;
+    cout << "Inserting 5 at position 3..." << endl;
+    insert(head, 5 , 3);
+    // cout << "Integer at position 3 removed: " << remove(head, 0) << endl;
 
 
 
