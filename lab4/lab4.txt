@@ -1,0 +1,12 @@
+int LinkedList::sumR(Node * curr) {
+	if (!curr) {
+		return 0;
+	}
+	return curr->m_data + sumR(curr->m_next);
+}
+9 items:
+85, 217, 117, 140, 190, 164, 101, 48, 224
+total = 1286
+
+sum() =  1286
+sumR() = 1286
