@@ -1,0 +1,50 @@
+int countEven(node * head) {
+    if (!head) {
+        return 0;
+    }
+    if (head->data % 2 == 1) {
+        return countEven(head->next);
+    }
+    return 1 + countEven(head->next);
+}
+
+int removeEven(node *& head) {
+    if (!head) {
+        return 0;
+    }
+    if (head->data % 2 == 0) {
+        node * del = head;
+        node * curr = head->next;
+        node * prev = head->previous;
+        
+        if (curr) {
+            curr->previous = prev;
+        }
+        if (prev) {
+            prev->next = curr;
+        }
+        
+        head = curr;
+        
+        delete del;
+        return 1 + removeEven(head);
+    }
+    return removeEven(head->next);
+}
+
+
+
+Here is the original list: 2 -> 3 -> 75 -> 67 -> 39 -> 35 -> 2 -> 25 -> 62 -> 26 -> 5 -> 70 -> 26 -> 2
+
+This list contains 14 number of items 
+There are 7 even nodes
+7 nodes have been removed
+
+
+The resulting list is... 3 -> 75 -> 67 -> 39 -> 35 -> 25 -> 5
+
+
+Now backwards: 5 -> 25 -> 35 -> 39 -> 67 -> 75 -> 3
+
+This list contains 7 number of items 
+The sum of all data is: 249
