@@ -1,39 +1,39 @@
-// node.h - Node template struct declaration and implementation
+// tablenode.h - Node template struct declaration and implementation
 
 #pragma once
 
 #include <iostream>
 
 template<class K, class V>
-struct Node {
-    Node();
-    Node(const K &, const V &);
-    ~Node();
+struct TableNode {
+    TableNode();
+    TableNode(const K &, const V &);
+    ~TableNode();
 
-    Node & operator=(const Node<K, V> &);
+    TableNode & operator=(const TableNode<K, V> &);
 
     template<class kK, class vV>
-    friend std::ostream & operator<<(std::ostream &, const Node<kK, vV> &);
+    friend std::ostream & operator<<(std::ostream &, const TableNode<kK, vV> &);
 
     K * key;
     V * value;
-    Node<K, V> * next;
+    TableNode<K, V> * next;
 };
 
 template<class K, class V>
-Node<K, V>::Node() {
+TableNode<K, V>::TableNode() {
     key = nullptr;
     value = nullptr;
     next = nullptr;
 }
 template<class K, class V>
-Node<K, V>::Node(const K &key, const V &value) {
+TableNode<K, V>::TableNode(const K &key, const V &value) {
     this->key = new K(key);
     this->value = new V(value);
     next = nullptr;
 }
 template<class K, class V>
-Node<K, V>::~Node() {
+TableNode<K, V>::~TableNode() {
     delete key;
     delete value;
     key = nullptr;
@@ -42,7 +42,7 @@ Node<K, V>::~Node() {
 }
 
 template<class K, class V>
-Node<K, V> & Node<K, V>::operator=(const Node<K, V> &obj) {
+TableNode<K, V> & TableNode<K, V>::operator=(const TableNode<K, V> &obj) {
     if (this != &obj) {
         delete key;
         delete value;
@@ -54,7 +54,7 @@ Node<K, V> & Node<K, V>::operator=(const Node<K, V> &obj) {
 }
 
 template<class K, class V>
-std::ostream & operator<<(std::ostream &out, const Node<K, V> &obj) {
+std::ostream & operator<<(std::ostream &out, const TableNode<K, V> &obj) {
     out << obj.value;
     return out;
 }

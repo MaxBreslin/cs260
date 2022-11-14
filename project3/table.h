@@ -1,6 +1,7 @@
 #pragma once
 
-#include "node.h"
+#include "tablenode.h"
+#include "list.h"
 
 template<class K, class V>
 class Table {
@@ -19,14 +20,14 @@ public:
     unsigned int hash(const K &) const;
 
     void insert(const K &, const V &);
-    V remove(const K &);
-    V retreive(const K &) const;
+    List<V> remove(const K &);
+    List<V> retreive(const K &) const;
     void display() const;
 
 private:
     unsigned int (*m_hasher)(const K &);
 
-    Node<K, V> ** m_table; // array of type Node<K> *
+    TableNode<K, V> ** m_table; // array of type TableNode<K> *
     size_t m_size;
 
     static const size_t DEFAULT_SIZE = 101;
@@ -36,7 +37,7 @@ template<class K, class V>
 Table<K, V>::Table() {
     m_hasher = nullptr;
     m_size = DEFAULT_SIZE;
-    m_table = new Node<K, V> *[m_size];
+    m_table = new TableNode<K, V> *[m_size];
 
     for (size_t i = 0; i < m_size; i ++) {
         m_table[i] = nullptr;
@@ -46,7 +47,7 @@ template<class K, class V>
 Table<K, V>::Table(size_t size) {
     m_hasher = nullptr;
     m_size = size;
-    m_table = new Node<K, V> *[m_size];
+    m_table = new TableNode<K, V> *[m_size];
 
     for (size_t i = 0; i < m_size; i ++) {
         m_table[i] = nullptr;
@@ -56,26 +57,26 @@ template<class K, class V>
 Table<K, V>::Table(const Table<K, V> &obj) {
     m_hasher = obj.m_hasher;
     m_size = obj.m_size;
+    m_table = new TableNode<K, V> *[m_size];
 
-    m_table = new Node<K, V> *[m_size];
     for (size_t i = 0; i < m_size; i ++) {
         m_table[i] = obj.m_table[i];
     }
 }
 template<class K, class V>
 Table<K, V>::~Table() {
-    Node<K, V> * curr = nullptr;
-    Node<K, V> * temp = nullptr;
+    TableNode<K, V> * curr = nullptr;
+    TableNode<K, V> * temp = nullptr;
+
     for (size_t i = 0; i < m_size; i ++) {
         curr = m_table[i];
-        if (curr) {
-            while (curr) {
-                temp = curr;
-                curr = curr->next;
-                delete temp;
-            }
+        while (curr) {
+            temp = curr;
+            curr = curr->next;
+            delete temp;
         }
     }
+
     delete [] m_table;
     m_table = nullptr;
     m_hasher = nullptr;
@@ -85,11 +86,23 @@ Table<K, V>::~Table() {
 template<class K, class V>
 Table<K,V> & Table<K, V>::operator=(const Table<K, V> &obj) {
     if (this != &obj) {
+        TableNode<K, V> * curr = nullptr;
+        TableNode<K, V> * temp = nullptr;
+
+        for (size_t i = 0; i < m_size; i ++) {
+            curr = m_table[i];
+            while (curr) {
+                temp = curr;
+                curr = curr->next;
+                delete temp;
+            }
+        }
         delete [] m_table;
+
         m_hasher = obj.m_hasher;
         m_size = obj.m_size;
+        m_table = new TableNode<K, V> *[m_size];
 
-        m_table = new Node<K, V> *[m_size];
         for (size_t i = 0; i < m_size; i ++) {
             m_table[i] = obj.m_table[i];
         }
@@ -99,7 +112,7 @@ Table<K,V> & Table<K, V>::operator=(const Table<K, V> &obj) {
 
 template<class K, class V>
 std::ostream & operator<<(std::ostream &out, const Table<K, V> &obj) {
-    Node<K, V> * temp = nullptr;
+    TableNode<K, V> * temp = nullptr;
     for (size_t i = 0; i < obj.m_size; i ++) {
         out << "[" << i << "]";
 
@@ -136,76 +149,69 @@ void Table<K, V>::insert(const K &key, const V &value) {
         throw "Hash function not set";
     }
 
-    Node<K, V> * head = new Node<K, V>(key, value);
     unsigned int index = hash(key);
-    Node<K, V> * temp = m_table[index];
+    TableNode<K, V> * head = new TableNode<K, V>(key, value);
+    TableNode<K, V> * temp = m_table[index];
 
     m_table[index] = head;
     head->next = temp;
 }
 
 template<class K, class V>
-V Table<K, V>::remove(const K &key) {
+List<V> Table<K, V>::remove(const K &key) {
     if (!m_hasher) {
         throw "Hash function not set";
     }
 
     unsigned int index = hash(key);
-    Node<K, V> * curr = m_table[index];
-    Node<K, V> * prev = m_table[index];
+    List<V> removed;
+    TableNode<K, V> * curr = m_table[index];
+    TableNode<K, V> * prev = nullptr;
+    TableNode<K, V> * temp = nullptr;
 
     if (!curr) {
-        throw "Value not found";
+        return removed;
     }
 
-    if (*curr->key == key) {
-        V temp = *curr->value;
-
-        m_table[index] = curr->next;
-        delete curr;
-        
-        return temp;
-    }
-
-    curr = curr->next;
-
-    while (*curr->key != key) {
-        prev = curr;
-        curr = curr->next;
-        if (!curr) {
-            throw "Value not found";
+    while (curr) {
+        if (*curr->key == key) {
+            temp = curr;
+            removed.insert(*curr->value);
+            if (prev) {
+                prev->next = curr->next;
+            }
+            else {
+                m_table[index] = curr->next;
+            }
+            curr = curr->next;
+            delete temp;
+        }
+        else {
+            prev = curr;
+            curr = curr->next;
         }
     }
-
-    V temp = *curr->value;
-
-    prev->next = curr->next;
-    delete curr;
-
-    return temp;
+    return removed;
 }
 
 template<class K, class V>
-V Table<K, V>::retreive(const K &key) const {
+List<V> Table<K, V>::retreive(const K &key) const {
     if (!m_hasher) {
         throw "Hash function not set";
     }
 
     unsigned int index = hash(key);
-    Node<K, V> * temp = m_table[index];
-    
-    if (!temp) {
-        return nullptr;
-    }
+    List<V> retreived;
+    TableNode<K, V> * curr = m_table[index];
 
-    while (*temp->key != key) {
-        temp = temp->next;
-        if (!temp) {
-            throw "Value not found";
+    while (curr) {
+        if (*curr->key == key) {
+            retreived.insert(*curr->value);
         }
+        curr = curr->next;
     }
 
-    return *temp->value;
+    return retreived;
 }
 
 template<class K, class V>

@@ -7,7 +7,7 @@ build: $(TARGET)
 $(TARGET): main.o website.o
 	$(CC) $(CFLAGS) -o $(TARGET) main.o website.o
 
-main.o: main.cpp main.h table.h node.h website.o
+main.o: main.cpp main.h table.h tablenode.h list.h listnode.h website.o
 	$(CC) $(CFLAGS) -c main.cpp
 website.o: website.cpp website.h
 	$(CC) $(CFLAGS) -c website.cpp

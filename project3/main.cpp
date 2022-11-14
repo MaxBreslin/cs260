@@ -1,55 +1,47 @@
 #include "main.h"
 
-
-
-
 int main() {
     Table<char *, unsigned int> table(23);
 
     table.set_hash_function(&hash_string);
 
-    char * name = "John Doe";
-    char * dog = "Husky";
+    char * topic1 = "computers";
+    char * topic2 = "cars";
+    char * topic3 = "food";
+    char * topic4 = "sports";
+    char * topic5 = "music";
+    char * topic6 = "movies";
+    char * topic7 = "books";
+    char * topic8 = "clothing";
+    char * topic9 = "toys";
+    char * topic10 = "games";
+    char * topic11 = "electronics";
+    char * topic12 = "furniture";
 
-    unsigned int sum = sum_ascii(name);
-    
-    table.insert(name, sum);
-    table.insert(dog, sum_ascii(dog));
-    table.insert(name, sum);
+    table.insert(topic1, 1);
+    table.insert(topic2, 2);
+    table.insert(topic3, 3);
+    table.insert(topic4, 4);
+    table.insert(topic5, 5);
+    table.insert(topic6, 6);
+    table.insert(topic7, 7);
+    table.insert(topic8, 8);
+    table.insert(topic9, 9);
+    table.insert(topic10, 10);
+    table.insert(topic11, 11);
+    table.insert(topic12, 12);
 
-    table.remove(name);
-    table.display();
-
-    table.~Table();
-}
-
-unsigned int sum_ascii(char * const &string) {
-    unsigned int sum = 0; 
-
-    for (size_t i = 0; i < strlen(string); i ++) {
-        sum += string[i];
-    }
-
-    return sum;
+    std::cout << table << std::endl;
 }
 
 unsigned int hash_string(char * const &string) {
-    unsigned int result = 0;
+    unsigned int hash = 0x811C9DC5;
+    size_t length = strlen(string);
 
-    for (size_t i = 0; i < strlen(string); i ++) {
-        result += power(string[i], i);
-    }
+    for (size_t i = 0; i < length; i ++) {
+        hash *= 0x1000193;
+        hash ^= string[i];
+    }   
 
-    return result;
-}
-
-unsigned int power(unsigned int x, unsigned int p) {
-    unsigned int result = 1;
-    
-    while (p) {
-        result *= x;
-        p --;
-    }
-
-    return result;
+    return hash;
 }
