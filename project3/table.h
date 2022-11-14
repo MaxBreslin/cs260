@@ -21,7 +21,8 @@ public:
 
     void insert(const K &, const V &);
     List<V> remove(const K &);
-    List<V> retreive(const K &) const;
+    List<V> retrieve(const K &) const;
+    void edit(const K &, const V &, const V &);
     void display() const;
 
 private:
@@ -119,7 +120,7 @@ std::ostream & operator<<(std::ostream &out, const Table<K, V> &obj) {
         temp = obj.m_table[i];
         if (temp) {
             while (temp) {
-                out << " -> " << *temp->value;
+                out << " -> [" << *temp->value << "]";
                 temp = temp->next;
             }
         }
@@ -195,23 +196,41 @@ List<V> Table<K, V>::remove(const K &key) {
 }
 
 template<class K, class V>
-List<V> Table<K, V>::retreive(const K &key) const {
+List<V> Table<K, V>::retrieve(const K &key) const {
     if (!m_hasher) {
         throw "Hash function not set";
     }
 
     unsigned int index = hash(key);
-    List<V> retreived;
+    List<V> retrieved;
     TableNode<K, V> * curr = m_table[index];
 
     while (curr) {
         if (*curr->key == key) {
-            retreived.insert(*curr->value);
+            retrieved.insert(*curr->value);
         }
         curr = curr->next;
     }
 
-    return retreived;
+    return retrieved;
+}
+
+template<class K, class V>
+void Table<K, V>::edit(const K &key, const V &value, const V &new_value) {
+    if (!m_hasher) {
+        throw "Hash function not set";
+    }
+
+    unsigned int index = hash(key);
+    TableNode<K, V> * curr = m_table[index];
+
+    while (curr) {
+        if (*curr->key == key && *curr->value == value) {
+            delete curr->value;
+            curr->value = new V(new_value);
+        }
+        curr = curr->next;
+    }
 }
 
 template<class K, class V>

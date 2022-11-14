@@ -14,6 +14,8 @@ public:
     template<class tT>
     friend std::ostream & operator<<(std::ostream &, const List<tT> &);
 
+    T operator[](size_t) const;
+
     void insert(const T &);
     void remove(const T &);
     void display() const;
@@ -78,11 +80,24 @@ List<T> & List<T>::operator=(const List &obj) {
 template<class T>
 std::ostream & operator<<(std::ostream &out, const List<T> &obj) {
     ListNode<T> * curr = obj.m_head;
+    int i = 1;
     while (curr) {
-        out << *curr->data << " ";
+        out << i << ": " << *curr->data << std::endl;
         curr = curr->next;
     }
     return out;
+}
+
+template<class T>
+T List<T>::operator[](size_t index) const {
+    if (index < 0 || index >= m_size) {
+        throw "Index out of range";
+    }
+    ListNode<T> * curr = m_head;
+    for (size_t i = 0; i < index; i ++) {
+        curr = curr->next;
+    }
+    return *curr->data;
 }
 
 template<class T>

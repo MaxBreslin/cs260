@@ -1,0 +1,9 @@
+cars,https://www.lucidmotors.com/,The Lucid Motors homepage,Good design and page flow,5
+chess,https://www.chess.com/,The Chess.com homepage,A little cluttered with a good menu on the left,3
+data science,https://www.kaggle.com/,The Kaggle homepage,Lots of information and pretty organized,4
+school,https://my.pcc.edu/,The myPCC homepage,A little disorganized,2
+sports,https://www.nba.com/,The NBA homepage,Shows good information but lacks animations or graphics,3
+school,https://www.khanacademy.org/profile/me/courses,The Khan Academy personal homepage,Organized menus and graphics,4
+cars,https://www.formula1.com/,The Formula 1 homepage,Some articles and reports,3
+cars,https://www.autotrader.com/,The Autotrader homepage,Good information but poor page layout,3
+programming,https://cplusplus.com/,The C++ homepage,Very useful information but unintuitive layout,3
