@@ -165,38 +165,31 @@ void insert_website(Table<String, Website> &table) {
 
     website.set_topic(topic);
     website.set_address(address);
-    delete[] address;
     website.set_summary(summary);
-    delete[] summary;
     website.set_review(review);
-    delete[] review;
     website.set_rating(rating);
 
     table.insert(topic, website);
-    delete[] topic;
 }
 
 void retrieve_websites(Table<String, Website> &table) {
-    String topic = nullptr;
+    String topic;
 
     std::cout << "Enter the topic of the website(s): ";
     topic.getline(std::cin);
 
     List<Website> websites = table.retrieve(topic);
-    std::cout << websites;
     if (websites.length()) {
         std::cout << websites << std::endl;
     }
     else {
         std::cout << "No websites with topic \'" << topic << "\' found" << std::endl;
     }
-
-    delete[] topic;
 }
 
 void edit_websites(Table<String, Website> &table) {
-    String topic = nullptr;
-    String review = nullptr;
+    String topic;
+    String review;
     int rating = 0;
 
     Website website;
@@ -240,7 +233,6 @@ void edit_websites(Table<String, Website> &table) {
         std::cin.ignore(2, '\n');
 
         new_website.set_review(review);
-        delete[] review;
         new_website.set_rating(rating);
 
         table.edit(topic, website, new_website);
@@ -248,12 +240,10 @@ void edit_websites(Table<String, Website> &table) {
     else {
         std::cout << "No websites with topic \'" << topic << "\' found" << std::endl;
     }
-
-    delete[] topic;
 }
 
 void remove_websites(Table<String, Website> &table) {
-    String topic = nullptr;
+    String topic;
 
     std::cout << "Enter the topic of the website(s) to remove: ";
     topic.getline(std::cin);
@@ -268,8 +258,6 @@ void remove_websites(Table<String, Website> &table) {
     else {
         std::cout << "No websites with topic \'" << topic << "\' found" << std::endl;
     }
-
-    delete[] topic;
 }
 
 void display_websites(Table<String, Website> &table) {

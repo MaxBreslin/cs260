@@ -47,7 +47,7 @@ std::ostream & operator<<(std::ostream &out, const String &obj) {
     out << obj.m_data;
     return out;
 }
-std::istream & operator>>(std::istream &in, const String &obj) {
+std::istream & operator>>(std::istream &in, String &obj) {
     obj.getline(in);
     return in;
 }
@@ -88,11 +88,13 @@ void String::set_data(char * const &data) {
 }
 
 
-void String::getline(std::istream &in, const char &delim = '\n') {
+void String::getline(std::istream &in, const char delim) {
     char * data = nullptr;
     char * temp = nullptr;
     int size = 0;
     char byte = 0;
+
+    delete[] m_data;
 
     while (in.good() && in.peek() != delim) {
         byte = in.get();
@@ -100,7 +102,6 @@ void String::getline(std::istream &in, const char &delim = '\n') {
             temp = new char[size + 2];
             memset(temp, 0, size + 2);
             strcpy(temp, data);
-            memset(data, 0, size + 1);
             delete[] data;
             data = temp;
             data[size ++] = byte;

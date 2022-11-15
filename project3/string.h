@@ -14,7 +14,7 @@ public:
     String & operator+=(const String &);
 
     friend std::ostream & operator<<(std::ostream &, const String &);
-    friend std::istream & operator>>(std::istream &, const String &);
+    friend std::istream & operator>>(std::istream &, String &);
 
     bool operator==(const String &) const;
     bool operator!=(const String &) const;
@@ -28,7 +28,7 @@ public:
     char * get_data() const;
     void set_data(char * const &);
 
-    void getline(std::istream &, const char &);
+    void getline(std::istream &, const char = '\n');
     
     size_t length() const;
 

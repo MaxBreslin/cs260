@@ -82,7 +82,7 @@ std::ostream & operator<<(std::ostream &out, const List<T> &obj) {
     ListNode<T> * curr = obj.m_head;
     int i = 1;
     while (curr) {
-        out << i << ": " << *curr->data << std::endl;
+        out << i ++ << ": " << *curr->data << std::endl;
         curr = curr->next;
     }
     return out;
