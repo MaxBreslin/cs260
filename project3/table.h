@@ -1,5 +1,7 @@
 #pragma once
 
+// table.h - Table template class declaration and implementation
+
 #include "tablenode.h"
 #include "list.h"
 
@@ -16,13 +18,27 @@ public:
     template<class kK, class vV>
     friend std::ostream & operator<<(std::ostream &, const Table<kK, vV> &);
 
+    // Sets m_hasher to the passed function pointer - MUST be called before
+    // any other methods are usable
     void set_hash_function(unsigned int (*)(const K &));
+
+    // Calls m_hasher on the passed key and returns the result
     unsigned int hash(const K &) const;
 
+    // Inserts the passed key-value pair into the table
     void insert(const K &, const V &);
+
+    // Removes every node in the table with the passed key and returns a list
+    // of the values that were removed
     List<V> remove(const K &);
+
+    // Returns a list of all values in the table with the passed key
     List<V> retrieve(const K &) const;
+
+    // Replaces the value of the node with the passed key with the passed value
     void edit(const K &, const V &, const V &);
+
+    // Displays the hash table
     void display() const;
 
 private:

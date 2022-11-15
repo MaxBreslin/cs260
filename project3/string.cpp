@@ -1,3 +1,5 @@
+// string.cpp - String class implementation
+
 #include "string.h"
 
 String::String() {
@@ -6,15 +8,24 @@ String::String() {
 }
 
 String::String(char * const &data) {
-    m_data = new char[strlen(data) + 1];
-    strcpy(m_data, data);
-    m_size = strlen(data);
+    m_data = nullptr;
+    m_size = 0;
+
+    if (data) {
+        m_data = new char[strlen(data) + 1];
+        strcpy(m_data, data);
+        m_size = strlen(data);
+    }
 }
 
 String::String(const String &obj) {
-    m_data = new char[obj.m_size + 1];
-    strcpy(m_data, obj.m_data);
+    m_data = nullptr;
     m_size = obj.m_size;
+
+    if (obj.m_data) {
+        m_data = new char[strlen(obj.m_data) + 1];
+        strcpy(m_data, obj.m_data);
+    }
 }
 
 String::~String() {
@@ -26,20 +37,26 @@ String::~String() {
 String & String::operator=(const String &obj) {
     if (this != &obj) {
         delete[] m_data;
-        m_data = new char[obj.m_size + 1];
-        strcpy(m_data, obj.m_data);
+        m_data = nullptr;
         m_size = obj.m_size;
+
+        if (obj.m_data) {
+            m_data = new char[obj.m_size + 1];
+            strcpy(m_data, obj.m_data);
+        }
     }
     return *this;
 }
 
 String & String::operator+=(const String &obj) {
-    char * temp = new char[m_size + obj.m_size + 1];
-    strcpy(temp, m_data);
-    strcat(temp, obj.m_data);
-    delete[] m_data;
-    m_data = temp;
-    m_size += obj.m_size;
+    if (obj.m_data) {
+        char * temp = new char[m_size + obj.m_size + 1];
+        strcpy(temp, m_data);
+        strcat(temp, obj.m_data);
+        delete[] m_data;
+        m_data = temp;
+        m_size += obj.m_size;
+    }
     return *this;
 }
 
@@ -48,17 +65,23 @@ std::ostream & operator<<(std::ostream &out, const String &obj) {
     return out;
 }
 std::istream & operator>>(std::istream &in, String &obj) {
-    obj.getline(in);
+    obj.get_line(in);
     return in;
 }
 
 bool String::operator==(const String &obj) const {
+    if (!(m_data && obj.m_data)) {
+        return false;
+    }
     return strcmp(m_data, obj.m_data) == 0;
 }
 bool String::operator!=(const String &obj) const {
     return !(*this == obj);
 }
 bool String::operator<(const String &obj) const {
+    if (!(m_data && obj.m_data)) {
+        return false;
+    }
     return strcmp(m_data, obj.m_data) < 0;
 }
 bool String::operator<=(const String &obj) const {
@@ -72,23 +95,39 @@ bool String::operator>=(const String &obj) const {
 }
 
 char String::operator[](size_t index) const {
+    if (index >= m_size) {
+        throw "Index out of range";
+    }
+    if (!m_data) {
+        throw "String is empty";
+    }
+
     return m_data[index];
 }
 
 char * String::get_data() const {
+    if (!m_data) {
+        return nullptr;
+    }
+
     char * temp = new char[m_size + 1];
     strcpy(temp, m_data);
     return temp;
 }
 void String::set_data(char * const &data) {
     delete[] m_data;
-    m_data = new char[strlen(data) + 1];
-    strcpy(m_data, data);
-    m_size = strlen(data);
+    m_data = nullptr;
+    m_size = 0;
+    
+    if (data) {
+        m_data = new char[strlen(data) + 1];
+        strcpy(m_data, data);
+        m_size = strlen(data);
+    }
 }
 
 
-void String::getline(std::istream &in, const char delim) {
+void String::get_line(std::istream &in, const char delim) {
     char * data = nullptr;
     char * temp = nullptr;
     int size = 0;

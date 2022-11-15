@@ -1,3 +1,5 @@
+// website.cpp - website class implementation
+
 #include "website.h"
 
 Website::Website() {

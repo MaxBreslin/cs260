@@ -1,6 +1,6 @@
-// tablenode.h - Node template struct declaration and implementation
-
 #pragma once
+
+// tablenode.h - TableNode template struct declaration and implementation
 
 #include <iostream>
 

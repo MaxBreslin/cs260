@@ -1,6 +1,6 @@
-// listnode.h - Node template struct declaration and implementation
-
 #pragma once
+
+// listnode.h - ListNode template struct declaration and implementation
 
 #include <iostream>
 

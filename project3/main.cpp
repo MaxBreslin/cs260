@@ -1,17 +1,17 @@
+// main.cpp - main function and menu functions
+
 #include "main.h"
 
 /*
-    Max Breslin - October 24st, 2022
+    Max Breslin - November 14st, 2022
     CS260 Data Structures
-    Project 2
+    Project 3
 
-    This program will read in a file of people and add them to a queue and stack.
-    It will then allow the user to add people to the queue and stack, remove
-    people from the queue and stack, and display the queue and stack. Everytime a
-    person is removed from the stack, their information will be written to 'promos.txt'.
+    This program will read in a file of websites and add them to a hash table.
+    It will then allow the user to add websites to the table, remove websites
+    from the table, edit websites in the table, and display all websites in the
+    table.
 */
-
-// main.cpp - main function and menu functions
 
 int main() {
     Table<String, Website> table(23);
@@ -86,10 +86,10 @@ void load_websites(Table<String, Website> &table, std::ifstream &file) {
     // Read in data from the file in format "topic,address,summary,review,rating" and 
     // add it to the table
     while (!file.eof()) {
-        topic.getline(file, ',');
-        address.getline(file, ',');
-        summary.getline(file, ',');
-        review.getline(file, ',');
+        topic.get_line(file, ',');
+        address.get_line(file, ',');
+        summary.get_line(file, ',');
+        review.get_line(file, ',');
         file >> rating;
         file.ignore(2, '\n');
 
@@ -115,7 +115,7 @@ int menu() {
               << "1 - Quit the program" << std::endl
               << "2 - Add a new webiste to the table" << std::endl
               << "3 - Display all websites with a certain topic" << std::endl
-              << "4 - Edit all websites with a certain topic" << std::endl
+              << "4 - Edit a website with a certain topic" << std::endl
               << "5 - Remove all websites with a certain topic" << std::endl
               << "6 - Display websites" << std::endl
               << "Enter option: ";
@@ -145,13 +145,13 @@ void insert_website(Table<String, Website> &table) {
     Website website;
 
     std::cout << "Enter the topic of the website: ";
-    topic.getline(std::cin);
+    topic.get_line(std::cin);
     std::cout << "Enter the address of the website: ";
-    address.getline(std::cin);
+    address.get_line(std::cin);
     std::cout << "Enter the summary of the website: ";
-    summary.getline(std::cin);
+    summary.get_line(std::cin);
     std::cout << "Enter the review of the website: ";
-    review.getline(std::cin);
+    review.get_line(std::cin);
     std::cout << "Enter the rating of the website: ";
     std::cin >> rating;
     while (std::cin.fail() || rating < 1 || rating > 5) {
@@ -176,7 +176,7 @@ void retrieve_websites(Table<String, Website> &table) {
     String topic;
 
     std::cout << "Enter the topic of the website(s): ";
-    topic.getline(std::cin);
+    topic.get_line(std::cin);
 
     List<Website> websites = table.retrieve(topic);
     if (websites.length()) {
@@ -198,7 +198,7 @@ void edit_websites(Table<String, Website> &table) {
     size_t index = 0;
 
     std::cout << "Enter the topic of the website(s) to edit: ";
-    topic.getline(std::cin);
+    topic.get_line(std::cin);
 
     List<Website> websites = table.retrieve(topic);
 
@@ -220,7 +220,7 @@ void edit_websites(Table<String, Website> &table) {
         new_website = website;
 
         std::cout << "Enter the new review for the website: ";
-        review.getline(std::cin);
+        review.get_line(std::cin);
         std::cout << "Enter the new rating for the website: ";
         std::cin >> rating;
         while (std::cin.fail() || rating < 1 || rating > 5) {
@@ -246,12 +246,12 @@ void remove_websites(Table<String, Website> &table) {
     String topic;
 
     std::cout << "Enter the topic of the website(s) to remove: ";
-    topic.getline(std::cin);
+    topic.get_line(std::cin);
 
     List<Website> websites = table.retrieve(topic);
 
     if (websites.length()) {
-        std::cout << websites << std::endl;
+        std::cout << "Removed: " << std::endl << websites << std::endl;
 
         table.remove(topic);
     }

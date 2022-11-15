@@ -1,5 +1,7 @@
 #pragma once
 
+// website.h - Website class declaration
+
 #include "string.h"
 #include <cstring>
 #include <iostream>
@@ -15,12 +17,14 @@ public:
 
     friend std::ostream & operator<<(std::ostream &, const Website &);
 
+    // Setters
     void set_topic(const String &);
     void set_address(const String &);
     void set_summary(const String &);
     void set_review(const String &);
     void set_rating(int);
 
+    // Getters
     String get_topic() const;
     String get_address() const;
     String get_summary() const;

@@ -1,5 +1,7 @@
 #pragma once
 
+// list.h - List template class declaration and implementation (linear linked list)
+
 #include "listnode.h"
 
 template<class T>
@@ -14,11 +16,20 @@ public:
     template<class tT>
     friend std::ostream & operator<<(std::ostream &, const List<tT> &);
 
+    // Returns the element at the passed index
     T operator[](size_t) const;
 
+    // Inserts the passed element at the front of the list
     void insert(const T &);
-    void remove(const T &);
+
+    // Removes all elements in the list with the passed value and returns a list
+    // of the values that were removed
+    List<T> remove(const T &);
+
+    // Displays the list
     void display() const;
+
+    // Returns the number of elements in the list
     size_t length() const;
 
 private:
@@ -90,7 +101,7 @@ std::ostream & operator<<(std::ostream &out, const List<T> &obj) {
 
 template<class T>
 T List<T>::operator[](size_t index) const {
-    if (index < 0 || index >= m_size) {
+    if (index >= m_size) {
         throw "Index out of range";
     }
     ListNode<T> * curr = m_head;
@@ -111,10 +122,11 @@ void List<T>::insert(const T &data) {
 }
 
 template<class T>
-void List<T>::remove(const T &data) {
+List<T> List<T>::remove(const T &data) {
     ListNode<T> * curr = m_head;
     ListNode<T> * prev = nullptr;
     ListNode<T> * temp = nullptr;
+    List<T> removed;
 
     while (curr) {
         if (*curr->data == data) {
@@ -126,6 +138,7 @@ void List<T>::remove(const T &data) {
                 m_head = curr->next;
             }
             curr = curr->next;
+            removed.insert(*temp->data);
             delete temp;
             m_size --;
         }
