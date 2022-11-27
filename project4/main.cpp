@@ -24,7 +24,9 @@ int main() {
     test.insert(8, 8);
     test.insert(2, 2);
 
-    std::cout << test << std::endl;
+    test.display();
+
+    // std::cout << test << std::endl;
 
     std::cout << "height: " << test.height() << std::endl;
     std::cout << "max width: " << test.max_width() << std::endl;

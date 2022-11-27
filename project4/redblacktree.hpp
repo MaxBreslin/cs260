@@ -33,6 +33,9 @@ private:
 
     size_t width(RedBlackTreeNode<K, V> *, unsigned int) const;
 
+    List<RedBlackTreeNode<K, V> *> level(unsigned int) const;
+    void level(unsigned int, RedBlackTreeNode<K, V> *, List<RedBlackTreeNode<K, V> *> &) const;
+
     RedBlackTreeNode<K, V> * insert(const K &, const V &, RedBlackTreeNode<K, V> *);
 
     List<RedBlackTreeNode<K, V> *> inorder_traversal() const;
@@ -129,7 +132,7 @@ size_t RedBlackTree<K, V>::max_width() const {
     size_t w = 0;
     size_t h = height(m_root);
  
-    for (size_t i = 1; i <= h; i ++) {
+    for (size_t i = 0; i < h; i ++) {
         w = width(m_root, i);
         max_width = max_width > w ? max_width : w;
     }
@@ -138,15 +141,42 @@ size_t RedBlackTree<K, V>::max_width() const {
 }
 
 template<class K, class V>
-size_t RedBlackTree<K, V>::width(RedBlackTreeNode<K, V> * root, unsigned int level) const {
+size_t RedBlackTree<K, V>::width(RedBlackTreeNode<K, V> * root, unsigned int l) const {
     if (!root) {
         return 0;
     }
-    if (level == 1) {
+
+    if (l == 0) {
         return 1;
     }
 
-    return width(root->left, level - 1) + width(root->right, level - 1);
+    return width(root->left, l - 1) + width(root->right, l - 1);
+}
+
+template<class K, class V>
+List<RedBlackTreeNode<K, V> *> RedBlackTree<K, V>::level(unsigned int l) const {
+    List<RedBlackTreeNode<K, V> *> nodes(width(m_root, l));
+    
+    level(l, m_root, nodes);
+
+    return nodes;
+}
+
+template<class K, class V>
+void RedBlackTree<K, V>::level(unsigned int l, RedBlackTreeNode<K, V> * root, List<RedBlackTreeNode<K, V> *> &nodes) const {
+    if (!l) {
+        nodes.insert(root);
+        return;
+    }
+
+    if (!root) {
+        level(l - 1, nullptr, nodes);
+        level(l - 1, nullptr, nodes);
+    }
+    else {
+        level(l - 1, root->left, nodes);
+        level(l - 1, root->right, nodes);
+    }
 }
 
 template<class K, class V>
@@ -170,7 +200,87 @@ RedBlackTreeNode<K, V> * RedBlackTree<K, V>::insert(const K &key, const V &value
 
 template<class K, class V>
 void RedBlackTree<K, V>::display() const {
-    return;
+    size_t h = height();
+
+    List<List<RedBlackTreeNode<K, V> *>> levels;
+
+    for (size_t i = 0; i < h; i ++) {
+        levels.insert(level(i));
+    }
+    
+
+    unsigned int pre_space = 0;
+    unsigned int between_space = 0;
+    unsigned int nodes_in_full_layer = 0; 
+
+    for (size_t i = 0; i < h; i ++) {
+        pre_space = pow(2, h - 1 - i) - 1;
+        nodes_in_full_layer = pow(2, i);
+        between_space = (pow(2, h) - 1 - 2 * pre_space - nodes_in_full_layer) / (nodes_in_full_layer - 1);
+
+        if (between_space) {
+            // for (unsigned int j = 0; j < pre_space; j ++) {
+            //     std::cout << " ";
+            // }
+
+            // for (unsigned int j = 0; j < nodes_in_full_layer; j ++) {
+            //     if (j % 2 == 1) {
+            //         for (unsigned int k = 0; k < between_space; k ++) {
+            //             std::cout << " ";
+            //         }
+            //         continue;
+            //     }
+            //     if (levels[i][j] && levels[i][j + 1]) {
+            //         std::cout << "+";
+            //         for (unsigned int k = 0; k < between_space; k ++) {
+            //             std::cout << "-";
+            //         }
+            //         std::cout << "+";
+            //     }
+            //     else if (levels[i][j]) {
+            //         std::cout << "+";
+            //         for (unsigned int k = 0; k < between_space; k ++) {
+            //             std::cout << "-";
+            //         }
+            //         std::cout << " ";
+            //     }
+            //     else if (levels[i][j + 1]) {
+            //         std::cout << " ";
+            //         for (unsigned int k = 0; k < between_space; k ++) {
+            //             std::cout << "-";
+            //         }
+            //         std::cout << "+";
+            //     }
+            //     else {
+            //         for (unsigned int k = 0; k < between_space + 2; k ++) {
+            //             std::cout << " ";
+            //         }
+            //     }
+            // }
+            // std::cout << std::endl;
+
+            
+        }
+
+        for (unsigned int j = 0; j < pre_space; j ++) {
+            std::cout << " ";
+        }
+
+        for (unsigned int j = 0; j < nodes_in_full_layer; j ++) {
+            if (levels[i][j]) {
+                std::cout << *levels[i][j]->value;
+            }
+            else {
+                std::cout << " ";
+            }
+
+            for (unsigned int k = 0; k < between_space; k ++) {
+                std::cout << " ";
+            }
+        }
+
+        std::cout << std::endl;
+    }
 }
 
 template<class K, class V>

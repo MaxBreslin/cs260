@@ -2,6 +2,7 @@
 
 #include "list.hpp"
 #include <iostream>
+#include <cmath>
 
 template<class K, class V>
 struct RedBlackTreeNode {
