@@ -14,19 +14,23 @@
 */
 
 int main() {
-    RedBlackTree<int, int> test;
+    AVLTree<int, int> test;
 
     test.insert(5, 5);
-    test.insert(6, 6);
     test.insert(3, 3);
-    test.insert(4, 4);
-    test.insert(7, 7);
-    test.insert(8, 8);
     test.insert(2, 2);
+    test.insert(4, 4);
+    test.insert(8, 8);
+    test.insert(7, 7);
+    test.insert(9, 9);
 
+    std::cout << "Before rotation: " << std::endl;
     test.display();
+    
+    test.rl_rotation();
 
-    // std::cout << test << std::endl;
+    std::cout << std::endl << "After rotation: " << std::endl;
+    test.display();
 
     std::cout << "height: " << test.height() << std::endl;
     std::cout << "max width: " << test.max_width() << std::endl;
