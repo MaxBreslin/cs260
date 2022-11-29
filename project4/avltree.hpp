@@ -248,7 +248,7 @@ AVLTreeNode<K, V> * AVLTree<K, V>::balance_node(AVLTreeNode<K, V> * root) {
     // Left subtree is heavier
     if (root_bf > 1) {
         // Left subtree is left heavy
-        if (balance_factor(root->left) > 0) {
+        if (balance_factor(root->left) >= 0) {
             return ll_rotation(root);
         }
         // Left subtree is right heavy
@@ -352,11 +352,7 @@ AVLTreeNode<K, V> * AVLTree<K, V>::remove(const K &key, AVLTreeNode<K, V> * root
         return nullptr;
     }
 
-    root = balance_node(root);
-    root->left = balance_node(root->left);
-    root->right = balance_node(root->right);
-
-    return root;
+    return balance_node(root);
 }
 
 template<class K, class V>
