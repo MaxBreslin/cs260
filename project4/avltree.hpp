@@ -1,5 +1,7 @@
 #pragma once
 
+// avltree.hpp - AVLTree template class declaration and implementation
+
 #include "avltreenode.hpp"
 
 template<class K, class V>
@@ -14,40 +16,56 @@ public:
     template<class kK, class vV>
     friend std::ostream & operator<<(std::ostream &, const AVLTree<kK, vV> &);
 
+    // Returns the height of the tree
     size_t height() const;
     
+    // Returns the max width of the tree
     size_t max_width() const;
 
+    // Inserts the passed key-value pair into the tree
+    // If the key already exists, the value is updated
     void insert(const K &, const V &);
 
+    // Removes the node with the passed key from the tree
+    // and returns the value associated with that key
+    // Throws an exception if the key is not found
     V remove(const K &);
 
+    // Returns the value associated with the passed key
+    // Throws an exception if the key is not found
     V retrieve(const K &) const;
 
+    // Returns a list of all values in the tree,
+    // sorted by key
     List<V> retrieve_all() const;
 
+    // Displays the tree in a graphical format
     void display() const;
     
 private:
+    // Recursive helper functions
     size_t height(AVLTreeNode<K, V> *) const;
-
     size_t width(AVLTreeNode<K, V> *, unsigned int) const;
+    AVLTreeNode<K, V> * insert(const K &, const V &, AVLTreeNode<K, V> *);
+    AVLTreeNode<K, V> * remove(const K &, AVLTreeNode<K, V> *);
+    V retrieve(const K &, AVLTreeNode<K, V> *) const;
 
+    // Returns height of the passed root's left subtree minus
+    // the height of the passed root's right subtree
     int balance_factor(AVLTreeNode<K, V> *) const;
 
+    // Returns a list of nodes at the passed level in the tree
+    // Used ONLY by display()
     List<AVLTreeNode<K, V> *> level(unsigned int) const;
     void level(unsigned int, AVLTreeNode<K, V> *, List<AVLTreeNode<K, V> *> &) const;
 
+    // Returns the left-most node from the passed root
     AVLTreeNode<K, V> * least_node(AVLTreeNode<K, V> *) const;
 
+    // Returns the passed root after balancing it
     AVLTreeNode<K, V> * balance_node(AVLTreeNode<K, V> *);
 
-    AVLTreeNode<K, V> * insert(const K &, const V &, AVLTreeNode<K, V> *);
-
-    AVLTreeNode<K, V> * remove(const K &, AVLTreeNode<K, V> *);
-
-    V retrieve(const K &, AVLTreeNode<K, V> *) const;
-
+    // Traversals that return a list of pointers to nodes
     List<AVLTreeNode<K, V> *> inorder_traversal() const;
     void inorder_traversal(AVLTreeNode<K, V> *, List<AVLTreeNode<K, V> *> &) const;
 
@@ -57,6 +75,7 @@ private:
     List<AVLTreeNode<K, V> *> postorder_traversal() const;
     void postorder_traversal(AVLTreeNode<K, V> *, List<AVLTreeNode<K, V> *> &) const;
 
+    // Rotates the passed root and returns the new root
     AVLTreeNode<K, V> * ll_rotation(AVLTreeNode<K, V> *);
     AVLTreeNode<K, V> * rr_rotation(AVLTreeNode<K, V> *);
     AVLTreeNode<K, V> * rl_rotation(AVLTreeNode<K, V> *);
@@ -178,6 +197,9 @@ int AVLTree<K, V>::balance_factor(AVLTreeNode<K, V> * root) const {
 
 template<class K, class V>
 List<AVLTreeNode<K, V> *> AVLTree<K, V>::level(unsigned int l) const {
+    if (l >= height()) {
+        throw "Level out of range";
+    }
     List<AVLTreeNode<K, V> *> nodes(width(m_root, l));
     
     level(l, m_root, nodes);
@@ -185,6 +207,8 @@ List<AVLTreeNode<K, V> *> AVLTree<K, V>::level(unsigned int l) const {
     return nodes;
 }
 
+// Fills the passed list with exactly 2^l nodes
+// If there is no node at a location, nullptr is inserted
 template<class K, class V>
 void AVLTree<K, V>::level(unsigned int l, AVLTreeNode<K, V> * root, List<AVLTreeNode<K, V> *> &nodes) const {
     if (!l) {
@@ -213,22 +237,32 @@ AVLTreeNode<K, V> * AVLTree<K, V>::least_node(AVLTreeNode<K, V> * root) const {
 
 template<class K, class V>
 AVLTreeNode<K, V> * AVLTree<K, V>::balance_node(AVLTreeNode<K, V> * root) {
+    if (!root) {
+        return nullptr;
+    }
+
     root->height = height(root);
 
     int root_bf = balance_factor(root);
 
+    // Left subtree is heavier
     if (root_bf > 1) {
+        // Left subtree is left heavy
         if (balance_factor(root->left) > 0) {
             return ll_rotation(root);
         }
+        // Left subtree is right heavy
         else {
             return lr_rotation(root);
         }
     }
+    // Right subtree is heavier
     else if (root_bf < -1) {
+        // Right subtree is left heavy
         if (balance_factor(root->right) > 0) {
             return rl_rotation(root);
         }
+        // Right subtree is right heavy
         else {
             return rr_rotation(root);
         }
@@ -255,7 +289,8 @@ AVLTreeNode<K, V> * AVLTree<K, V>::insert(const K &key, const V &value, AVLTreeN
         root->right = insert(key, value, root->right);
     }
     else {
-        throw "Duplicate keys are not allowed";
+        root->value = value;
+        return root;
     }
 
     return balance_node(root);
@@ -311,10 +346,6 @@ AVLTreeNode<K, V> * AVLTree<K, V>::remove(const K &key, AVLTreeNode<K, V> * root
             m_size --;
             delete temp;
         }
-    }
-
-    if (!root) {
-        return root;
     }
 
     return balance_node(root);
@@ -377,6 +408,7 @@ void AVLTree<K, V>::display() const {
     for (size_t i = 0; i < h; i ++) {
         pre_space = pow(2, h - i) - 2;
         nodes_in_full_layer = pow(2, i);
+        // between_space = ( total space - both pre spaces - space of all nodes in layer ) / ( number of between spaces needed )
         between_space = (4 * pow(2, h - 1) - 1 - 2 * pre_space - 3 * nodes_in_full_layer) / (nodes_in_full_layer - 1);
 
         if (between_space) {

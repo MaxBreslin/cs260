@@ -1,6 +1,6 @@
 #pragma once
 
-// list.h - List template class declaration and implementation (linear linked list)
+// list.hpp - List template class declaration and implementation (array-based)
 
 #include <iostream>
 

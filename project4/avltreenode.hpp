@@ -1,5 +1,7 @@
 #pragma once
 
+// avltreenode.hpp - AVLTreeNode template class declaration and implementation
+
 #include "list.hpp"
 #include "string.hpp"
 #include <iostream>

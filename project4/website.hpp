@@ -1,6 +1,6 @@
 #pragma once
 
-// website.h - Website class declaration
+// website.hpp - Website class declaration
 
 #include "string.hpp"
 #include <cstring>

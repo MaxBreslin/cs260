@@ -1,6 +1,6 @@
 #pragma once
 
-// string.h - String class declaration
+// string.hpp - String class declaration
 
 #include <iostream>
 #include <cstring>
@@ -36,6 +36,7 @@ public:
     // Reads a line of input from the user and stores it in m_data
     void get_line(std::istream &, const char = '\n');
 
+    // Returns a substring of m_data equal to the range [start, end)
     String substring(size_t, size_t) const;
     
     // Returns m_size
