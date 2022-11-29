@@ -348,7 +348,15 @@ AVLTreeNode<K, V> * AVLTree<K, V>::remove(const K &key, AVLTreeNode<K, V> * root
         }
     }
 
-    return balance_node(root);
+    if (!root) {
+        return nullptr;
+    }
+
+    root = balance_node(root);
+    root->left = balance_node(root->left);
+    root->right = balance_node(root->right);
+
+    return root;
 }
 
 template<class K, class V>
