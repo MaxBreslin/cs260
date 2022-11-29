@@ -126,7 +126,6 @@ void String::set_data(char * const &data) {
     }
 }
 
-
 void String::get_line(std::istream &in, const char delim) {
     char * data = nullptr;
     char * temp = nullptr;
@@ -157,6 +156,22 @@ void String::get_line(std::istream &in, const char delim) {
 
     m_data = data;
     m_size = size;
+}
+
+String String::substring(size_t start, size_t end) const {
+    if (start >= m_size || end >= m_size) {
+        throw "Index out of range";
+    }
+    if (!m_data) {
+        throw "String is empty";
+    }
+
+    char * temp = new char[end - start + 2];
+    memset(temp, 0, end - start + 2);
+    strncpy(temp, m_data + start, end - start + 1);
+    String result(temp);
+    delete[] temp;
+    return result;
 }
 
 size_t String::length() const {

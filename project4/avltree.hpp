@@ -20,28 +20,33 @@ public:
 
     void insert(const K &, const V &);
 
-    // List<V> remove(const K &);
+    V remove(const K &);
 
-    // List<V> retrieve(const K &) const;
+    V retrieve(const K &) const;
 
-    // void edit(const K &, const V &, const V &);
-
-    void ll_rotation();
-    void rr_rotation();
-    void rl_rotation();
-    void lr_rotation();
+    List<V> retrieve_all() const;
 
     void display() const;
-
+    
 private:
     size_t height(AVLTreeNode<K, V> *) const;
 
     size_t width(AVLTreeNode<K, V> *, unsigned int) const;
 
+    int balance_factor(AVLTreeNode<K, V> *) const;
+
     List<AVLTreeNode<K, V> *> level(unsigned int) const;
     void level(unsigned int, AVLTreeNode<K, V> *, List<AVLTreeNode<K, V> *> &) const;
 
+    AVLTreeNode<K, V> * least_node(AVLTreeNode<K, V> *) const;
+
+    AVLTreeNode<K, V> * balance_node(AVLTreeNode<K, V> *);
+
     AVLTreeNode<K, V> * insert(const K &, const V &, AVLTreeNode<K, V> *);
+
+    AVLTreeNode<K, V> * remove(const K &, AVLTreeNode<K, V> *);
+
+    V retrieve(const K &, AVLTreeNode<K, V> *) const;
 
     List<AVLTreeNode<K, V> *> inorder_traversal() const;
     void inorder_traversal(AVLTreeNode<K, V> *, List<AVLTreeNode<K, V> *> &) const;
@@ -103,7 +108,7 @@ AVLTree<K, V> & AVLTree<K, V>::operator=(const AVLTree<K, V> &obj) {
 
         List<AVLTreeNode<K, V> *> new_nodes = obj.preoder_traversal();
         for (size_t i = 0; i < obj.m_size; i ++) {
-            insert(*new_nodes[i]->key, *new_nodes[i]->value);
+            insert(new_nodes[i]->key, new_nodes[i]->value);
         }
     }
     return *this;
@@ -149,7 +154,6 @@ size_t AVLTree<K, V>::max_width() const {
  
     return max_width;
 }
-
 template<class K, class V>
 size_t AVLTree<K, V>::width(AVLTreeNode<K, V> * root, unsigned int l) const {
     if (!root) {
@@ -161,6 +165,15 @@ size_t AVLTree<K, V>::width(AVLTreeNode<K, V> * root, unsigned int l) const {
     }
 
     return width(root->left, l - 1) + width(root->right, l - 1);
+}
+
+template<class K, class V>
+int AVLTree<K, V>::balance_factor(AVLTreeNode<K, V> * root) const {
+    if (!root) {
+        return 0;
+    }
+
+    return height(root->left) - height(root->right);
 }
 
 template<class K, class V>
@@ -190,6 +203,41 @@ void AVLTree<K, V>::level(unsigned int l, AVLTreeNode<K, V> * root, List<AVLTree
 }
 
 template<class K, class V>
+AVLTreeNode<K, V> * AVLTree<K, V>::least_node(AVLTreeNode<K, V> * root) const {
+    if (!root->left) {
+        return root;
+    }
+
+    return least_node(root->left);
+}
+
+template<class K, class V>
+AVLTreeNode<K, V> * AVLTree<K, V>::balance_node(AVLTreeNode<K, V> * root) {
+    root->height = height(root);
+
+    int root_bf = balance_factor(root);
+
+    if (root_bf > 1) {
+        if (balance_factor(root->left) > 0) {
+            return ll_rotation(root);
+        }
+        else {
+            return lr_rotation(root);
+        }
+    }
+    else if (root_bf < -1) {
+        if (balance_factor(root->right) > 0) {
+            return rl_rotation(root);
+        }
+        else {
+            return rr_rotation(root);
+        }
+    }
+
+    return root;
+}
+
+template<class K, class V>
 void AVLTree<K, V>::insert(const K &key, const V &value) {
     m_root = insert(key, value, m_root);
 }
@@ -199,34 +247,120 @@ AVLTreeNode<K, V> * AVLTree<K, V>::insert(const K &key, const V &value, AVLTreeN
         m_size ++;
         return new AVLTreeNode<K, V>(key, value);
     }
-    if (key < *root->key) {
+
+    if (key < root->key) {
         root->left = insert(key, value, root->left);
     }
-    else {
+    else if (key > root->key) {
         root->right = insert(key, value, root->right);
     }
-    return root;
+    else {
+        throw "Duplicate keys are not allowed";
+    }
+
+    return balance_node(root);
 }
 
 template<class K, class V>
-void AVLTree<K, V>::ll_rotation() {
-    m_root = ll_rotation(m_root);
+V AVLTree<K, V>::remove(const K &key) {
+    V value = retrieve(key);
+    m_root = remove(key, m_root);
+    return value;
 }
 template<class K, class V>
-void AVLTree<K, V>::rr_rotation() {
-    m_root = rr_rotation(m_root);
+AVLTreeNode<K, V> * AVLTree<K, V>::remove(const K &key, AVLTreeNode<K, V> * root) {
+    if (!root) {
+        throw "Node with key not found";
+    }
+
+    if (key < root->key) {
+        root->left = remove(key, root->left);
+    }
+    else if (key > root->key) {
+        root->right = remove(key, root->right);
+    }
+    else {
+        // Three possible cases:
+        // 1. root is a leaf node
+        // 2. root has one child
+        // 3. root has two children
+
+        // 3:
+        if (root->left && root->right) {
+            AVLTreeNode<K, V> * low_node = least_node(root->right);
+
+            root->key = low_node->key;
+            root->value = low_node->value;
+            root->height = low_node->height;
+
+            root->right = remove(low_node->key, root->right);
+        }
+        // 1 & 2:
+        else {
+            AVLTreeNode<K, V> * temp = root;
+
+            // 2:
+            if (root->left || root->right) {
+                root = root->left ? root->left : root->right;
+            }
+            // 1:
+            else {
+                root = nullptr;
+            }
+
+            m_size --;
+            delete temp;
+        }
+    }
+
+    if (!root) {
+        return root;
+    }
+
+    return balance_node(root);
 }
+
 template<class K, class V>
-void AVLTree<K, V>::rl_rotation() {
-    m_root = rl_rotation(m_root);
+V AVLTree<K, V>::retrieve(const K &key) const {
+    return retrieve(key, m_root);
 }
+
 template<class K, class V>
-void AVLTree<K, V>::lr_rotation() {
-    m_root = lr_rotation(m_root);
+V AVLTree<K, V>::retrieve(const K &key, AVLTreeNode<K, V> * root) const {
+    if (!root) {
+        throw "Node with key not found";
+    }
+
+    if (key < root->key) {
+        return retrieve(key, root->left);
+    }
+    else if (key > root->key) {
+        return retrieve(key, root->right);
+    }
+    else {
+        return root->value;
+    }
+}
+
+template<class K, class V>
+List<V> AVLTree<K, V>::retrieve_all() const {
+    List<AVLTreeNode<K, V> *> nodes = inorder_traversal();
+    List<V> values(nodes.length());
+
+    for (size_t i = 0; i < nodes.length(); i ++) {
+        values.insert(nodes[i]->value);
+    }
+
+    return values;
 }
 
 template<class K, class V>
 void AVLTree<K, V>::display() const {
+    // THIS FUNCTION CURRENTLY ONLY WORKS FOR STRING KEYS DUE TO SPACING ISSUES
+    if (typeid(K) != typeid(String)) {
+        throw "This function is only implemented for String keys";
+    }
+    
     size_t h = height();
 
     List<List<AVLTreeNode<K, V> *>> levels;
@@ -241,18 +375,18 @@ void AVLTree<K, V>::display() const {
     unsigned int nodes_in_full_layer = 0; 
 
     for (size_t i = 0; i < h; i ++) {
-        pre_space = pow(2, h - 1 - i) - 1;
+        pre_space = pow(2, h - i) - 2;
         nodes_in_full_layer = pow(2, i);
-        between_space = (pow(2, h) - 1 - 2 * pre_space - nodes_in_full_layer) / (nodes_in_full_layer - 1);
+        between_space = (4 * pow(2, h - 1) - 1 - 2 * pre_space - 3 * nodes_in_full_layer) / (nodes_in_full_layer - 1);
 
         if (between_space) {
-            for (unsigned int j = 0; j < pre_space; j ++) {
+            for (unsigned int j = 0; j < pre_space + 2; j ++) {
                 std::cout << " ";
             }
 
             for (unsigned int j = 0; j < nodes_in_full_layer; j ++) {
                 if (j % 2 == 1) {
-                    for (unsigned int k = 0; k < between_space; k ++) {
+                    for (unsigned int k = 0; k < between_space + 4; k ++) {
                         std::cout << " ";
                     }
                     continue;
@@ -293,10 +427,10 @@ void AVLTree<K, V>::display() const {
 
         for (unsigned int j = 0; j < nodes_in_full_layer; j ++) {
             if (levels[i][j]) {
-                std::cout << *levels[i][j]->value;
+                std::cout << levels[i][j]->key.substring(0, 2);
             }
             else {
-                std::cout << " ";
+                std::cout << "   ";
             }
 
             for (unsigned int k = 0; k < between_space; k ++) {

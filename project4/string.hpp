@@ -35,6 +35,8 @@ public:
 
     // Reads a line of input from the user and stores it in m_data
     void get_line(std::istream &, const char = '\n');
+
+    String substring(size_t, size_t) const;
     
     // Returns m_size
     size_t length() const;

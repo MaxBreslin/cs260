@@ -1,6 +1,7 @@
 #pragma once
 
 #include "list.hpp"
+#include "string.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -15,9 +16,9 @@ struct AVLTreeNode {
     template<class kK, class vV>
     friend std::ostream & operator<<(std::ostream &, const AVLTreeNode<kK, vV> &);
 
-    K * key;
-    V * value;
-    unsigned int height;
+    K key;
+    V value;
+    size_t height;
 
     AVLTreeNode<K, V> * left;
     AVLTreeNode<K, V> * right;
@@ -25,9 +26,9 @@ struct AVLTreeNode {
 
 template<class K, class V>
 AVLTreeNode<K, V>::AVLTreeNode() {
-    key = nullptr;
-    value = nullptr;
-    height = 0;
+    key = K();
+    value = V();
+    height = 1;
 
     left = nullptr;
     right = nullptr;
@@ -35,9 +36,9 @@ AVLTreeNode<K, V>::AVLTreeNode() {
 
 template<class K, class V>
 AVLTreeNode<K, V>::AVLTreeNode(const K &key, const V &value) {
-    this->key = new K(key);
-    this->value = new V(value);
-    height = 0;
+    this->key = key;
+    this->value = value;
+    height = 1;
 
     left = nullptr;
     right = nullptr;
@@ -45,11 +46,9 @@ AVLTreeNode<K, V>::AVLTreeNode(const K &key, const V &value) {
 
 template<class K, class V>
 AVLTreeNode<K, V>::~AVLTreeNode() {
-    delete key;
-    delete value;
-    key = nullptr;
-    value = nullptr;
-    height = 0;
+    key.~K();
+    value.~V();
+    height = 1;
 
     left = nullptr;
     right = nullptr;
@@ -58,10 +57,8 @@ AVLTreeNode<K, V>::~AVLTreeNode() {
 template<class K, class V>
 AVLTreeNode<K, V> & AVLTreeNode<K, V>::operator=(const AVLTreeNode<K, V> &obj) {
     if (this != &obj) {
-        delete key;
-        delete value;
-        key = new K(*obj.key);
-        value = new V(*obj.value);
+        key = obj.key;
+        value = obj.value;
         height = obj.height;
 
         left = obj.left;
@@ -72,7 +69,7 @@ AVLTreeNode<K, V> & AVLTreeNode<K, V>::operator=(const AVLTreeNode<K, V> &obj) {
 
 template<class K, class V>
 std::ostream & operator<<(std::ostream &out, const AVLTreeNode<K, V> &obj) {
-    out << *obj.value;
+    out << obj.value;
     return out;
 }
 

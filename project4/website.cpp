@@ -9,13 +9,15 @@ Website::Website() {
 Website::Website(const Website &obj) {
     m_rating = obj.m_rating;
     m_topic = obj.m_topic;
+    m_keyword = obj.m_keyword;
     m_address = obj.m_address;
     m_summary = obj.m_summary;
     m_review = obj.m_review;
 }
 
-Website::Website(const String &topic, const String &address, const String &summary, const String &review, int rating) {
+Website::Website(const String &topic, const String &keyword, const String &address, const String &summary, const String &review, int rating) {
     m_topic = topic;
+    m_keyword = keyword;
     m_address = address;
     m_summary = summary;
     m_review = review;
@@ -24,6 +26,7 @@ Website::Website(const String &topic, const String &address, const String &summa
 
 Website::~Website() {
     m_topic.~String();
+    m_keyword.~String();
     m_address.~String();
     m_summary.~String();
     m_review.~String();
@@ -33,6 +36,7 @@ Website & Website::operator=(const Website &obj) {
     if (this != &obj) {
         m_rating = obj.m_rating;
         m_topic = obj.m_topic;
+        m_keyword = obj.m_keyword;
         m_address = obj.m_address;
         m_summary = obj.m_summary;
         m_review = obj.m_review;
@@ -41,9 +45,10 @@ Website & Website::operator=(const Website &obj) {
 }
 
 std::ostream & operator<<(std::ostream &out, const Website &obj) {
+    out << obj.m_keyword << ", ";
     out << obj.m_topic << ", ";
-    out <<  obj.m_address << ", ";
-    out <<  obj.m_summary << ", ";
+    out << obj.m_address << ", ";
+    out << obj.m_summary << ", ";
     out << obj.m_review << ", ";
     out << obj.m_rating;
     return out;
@@ -51,6 +56,10 @@ std::ostream & operator<<(std::ostream &out, const Website &obj) {
 
 void Website::set_topic(const String &topic) {
     m_topic = topic;
+}
+
+void Website::set_keyword(const String &keyword) {
+    m_keyword = keyword;
 }
 
 void Website::set_address(const String &address) {
@@ -73,6 +82,10 @@ String Website::get_topic() const {
     return m_topic;
 }
 
+String Website::get_keyword() const {
+    return m_keyword;
+}
+
 String Website::get_address() const {
     return m_address;
 }
@@ -90,7 +103,7 @@ int Website::get_rating() const {
 }
 
 bool Website::operator==(const Website &obj) const {
-    if (m_topic == obj.m_topic && m_address == obj.m_address && m_summary == obj.m_summary && m_review == obj.m_review && m_rating == obj.m_rating) {
+    if (m_topic == obj.m_topic && m_keyword == obj.m_topic && m_address == obj.m_address && m_summary == obj.m_summary && m_review == obj.m_review && m_rating == obj.m_rating) {
         return true;
     }
     return false;
