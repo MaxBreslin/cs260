@@ -1,0 +1,36 @@
+int height(node * root) {
+    if (!root) {
+        return 0;
+    }
+
+    int left = height(root->left);
+    int right = height(root->right);
+
+    return left > right ? left + 1 : right + 1;
+}
+
+
+Welcome to the Proficiency Demo!
+
+Inorder traversal: 87  100  100  121  177  
+
+Level 1: 121
+Level 2: 100 and 177
+Level 3: 87 and 100
+
+
+This tree contains 5 items 
+Count: 5
+Sum: 585
+Height: 3
+
+
+The resulting tree after your function ran is: 
+Inorder traversal: 87  100  100  121  177  
+
+Level 1: 121
+Level 2: 100 and 177
+Level 3: 87 and 100
+
+
+This tree contains 5 items 
