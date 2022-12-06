@@ -1,0 +1,88 @@
+int sumOfEvenNodes(node * root) {
+    if (!root) {
+        return 0;
+    }
+
+    if (root->data % 2 == 0) {
+        return root->data + sumOfEvenNodes(root->left) + sumOfEvenNodes(root->right);
+    }
+    return sumOfEvenNodes(root->left) + sumOfEvenNodes(root->right);
+}
+
+void copyNonLeaf(node * root, node *& newRoot) {
+    newRoot = copyToNewRoot(root, newRoot);
+}
+
+node * copyToNewRoot(node * root, node * newRoot) {
+    // If root is null or a leaf
+    if (!root || !(root->left || root->right)) {
+        return nullptr;
+    }
+
+    if (!newRoot) {
+        newRoot = new node;
+        newRoot->left = nullptr;
+        newRoot->right = nullptr;
+    }
+
+    newRoot->data = root->data;
+    newRoot->left = copyToNewRoot(root->left, newRoot->left);
+    newRoot->right = copyToNewRoot(root->right, newRoot->right);
+
+    return newRoot;
+}
+
+
+Welcome to the Proficiency Demo!
+
+Inorder traversal: 40  44  65  69  70  83  91  100  100  108  131  226  234  236  
+
+Level 1: 91
+Level 2: 83 and 226
+Level 3: 40
+Level 4: 65
+Level 5: 44 and 70
+Level 6: 69
+Level 3: 108 and 236
+Level 4: 100 and 131
+Level 5: 100
+Level 4: 234
+
+
+This tree contains 14 items 
+Sum of even nodes: 1158
+Copying non-leaf nodes from root to newRoot...
+New tree: 
+
+
+The resulting tree after your function ran is: 
+Inorder traversal: 40  65  70  83  91  100  108  226  236  
+
+Level 1: 91
+Level 2: 83 and 226
+Level 3: 40
+Level 4: 65
+Level 5: 70
+Level 3: 108 and 236
+Level 4: 100
+
+
+This tree contains 9 items 
+
+
+The resulting tree after your function ran is: 
+Inorder traversal: 40  44  65  69  70  83  91  100  100  108  131  226  234  236  
+
+Level 1: 91
+Level 2: 83 and 226
+Level 3: 40
+Level 4: 65
+Level 5: 44 and 70
+Level 6: 69
+Level 3: 108 and 236
+Level 4: 100 and 131
+Level 5: 100
+Level 4: 234
+
+
+This tree contains 14 items 
